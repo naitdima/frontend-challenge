@@ -34,18 +34,20 @@
 
 <style>
 #app {
-  font-family: var(--font-regular);
+  font-family: var(--main-font-family);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+</style>
 
+<style scoped>
 .main {
   max-width: var(--max-width);
   margin: 0 auto;
 }
 
 .heading1 {
-  font-family: var(--font-bold);
+  font-weight: 700;
 }
 
 .component-list {
