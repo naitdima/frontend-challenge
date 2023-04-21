@@ -14,7 +14,7 @@
   </header>
 </template>
 
-<style lang="scss">
+<style scoped>
 .header {
   margin: 0 auto;
   padding: 24px 0;

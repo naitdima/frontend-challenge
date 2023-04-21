@@ -4,7 +4,7 @@
   </div>
 </template>
 
-<style>
+<style scoped>
 :root {
   --shadow-card: 0px 2px 8px rgba(0, 0, 0, 0.2);
 }

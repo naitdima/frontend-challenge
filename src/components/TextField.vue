@@ -2,7 +2,7 @@
   <input class="text-field" />
 </template>
 
-<style lang="scss">
+<style scoped>
 .text-field {
   padding: 12px 0;
   border: none;

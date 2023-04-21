@@ -1,12 +1,10 @@
 <template>
   <button class="button">
-    <span class="button-content">
-      <slot />
-    </span>
+    <slot />
   </button>
 </template>
 
-<style lang="scss">
+<style scoped>
 .button {
   padding: 4px 12px;
   border: none;
@@ -16,6 +14,7 @@
   font-family: inherit;
 
   &:hover {
+    cursor: pointer;
     background: var(--color-primary-blue3);
   }
 
@@ -25,11 +24,8 @@
 
   &:disabled {
     background: var(--color-primary-blue1);
-
-    .button-content {
-      color: var(--app-foreground1);
-      cursor: not-allowed;
-    }
+    color: var(--color-foreground1);
+    cursor: not-allowed;
   }
 }
 </style>
