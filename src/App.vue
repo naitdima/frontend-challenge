@@ -1,21 +1,3 @@
-<script lang="ts">
-import { defineComponent } from 'vue'
-import Header from './components/Header.vue'
-import TextField from './components/TextField.vue'
-import Card from './components/Card.vue'
-import Button from './components/Button.vue'
-import './index.css'
-
-export default defineComponent({
-  components: {
-    Header,
-    TextField,
-    Card,
-    Button
-  }
-})
-</script>
-
 <template>
   <Header />
   <main class="main">
