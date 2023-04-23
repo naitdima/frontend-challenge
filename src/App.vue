@@ -1,36 +1,57 @@
 <template>
   <Header />
-  <main class="main">
-    <h1 class="heading1">Welcome to the coding challenge</h1>
-    <p>Please take a look at the <code>README.md</code> file for instructions on how to complete this task.</p>
-    <p>
-      In the interest of saving you some time, we have provided a working Vue app with a few components to get you
-      started.
-    </p>
-    <p>Feel free to use them and change them as you need.</p>
-    <ul class="component-list">
-      <li>
-        <p><code>TextField</code></p>
-        <TextField placeholder="Placeholder" />
-      </li>
-      <li>
-        <p><code>Card</code></p>
-        <Card>
-          <p>Generic card content</p>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis ex, totam ducimus quam eligendi quasi
-            laborum optio, tenetur, aperiam reprehenderit voluptates? A velit quia inventore amet excepturi pariatur
-            praesentium. Quibusdam.
-          </p>
-        </Card>
-      </li>
-      <li>
-        <p><code>Button</code></p>
-        <Button>Button Label</Button>
-      </li>
-    </ul>
-  </main>
+  <Form @submit="subscribe" />
+  <Stocks />
 </template>
+
+<script setup lang="ts">
+import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { useStocksStore } from '@/store/stocks'
+import { storeToRefs } from 'pinia'
+
+const socket = ref(null)
+
+const stocksStore = useStocksStore()
+const { stocks } = storeToRefs(stocksStore)
+
+function sendMessage(message) {
+  if (socket.value && socket.value.readyState === WebSocket.OPEN) {
+    socket.value.send(message);
+  } else {
+    console.log('WebSocket is not connected.');
+  }
+}
+
+function subscribe(isin: string) {
+  sendMessage(`{"subscribe":"${isin}"}`)
+}
+
+function unsubscribe(isin: string) {
+  sendMessage(`{"unsubscribe":"${isin}"}`)
+}
+
+onMounted(() => {
+  socket.value = new WebSocket('ws://localhost:8425')
+
+  socket.value.addEventListener('open', (event) => {
+    console.log('WebSocket connected:', event);
+  })
+
+  socket.value.addEventListener('message', (event) => {
+    const newStock = JSON.parse(event.data)
+    const index = stocks.value.findIndex(stock => stock.isin === newStock.isin)
+    if (index >= 0) {
+      stocks.value.splice(index, 1, newStock)
+    } else {
+      stocks.value.push(newStock)
+    }
+  })
+})
+
+onBeforeUnmount(() => {
+  socket.value?.close?.()
+})
+</script>
 
 <style>
 #app {
