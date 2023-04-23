@@ -9,9 +9,9 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
-    Button: typeof import('./src/components/Button.vue')['default']
+    Button: typeof import('./src/components/ui/Button.vue')['default']
     Card: typeof import('./src/components/Card.vue')['default']
     Header: typeof import('./src/components/Header.vue')['default']
-    TextField: typeof import('./src/components/TextField.vue')['default']
+    TextField: typeof import('./src/components/ui/TextField.vue')['default']
   }
 }
