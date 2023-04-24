@@ -1,10 +1,6 @@
 <template>
   <ul class="stocks">
-    <li
-      v-for="stock in stocks"
-      :key="stock.isin"
-      class="stocks__item"
-    >
+    <li v-for="stock in stocks" :key="stock.isin" class="stocks__item">
       <Stock :stock="stock" deletable @delete="unsubscribe(stock.isin)" />
     </li>
   </ul>

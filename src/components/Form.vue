@@ -9,9 +9,7 @@
       placeholder="XX0000000000"
       @update:modelValue="onChangeISIN"
     />
-    <Button class="form__btn">
-      Subscribe
-    </Button>
+    <Button class="form__btn"> Subscribe </Button>
   </form>
 </template>
 

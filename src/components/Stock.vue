@@ -10,23 +10,19 @@
       <div class="stock__container">
         <div>
           <dl class="stock__param">
-            <dt class="stock__param-label">
-              Ask
-            </dt>
+            <dt class="stock__param-label">Ask</dt>
             <dd class="stock__param-value stock__param-value_negative">
               {{ stock.ask.toFixed(2) }}
             </dd>
           </dl>
           <dl class="stock__param">
-            <dt class="stock__param-label">
-              Bid
-            </dt>
+            <dt class="stock__param-label">Bid</dt>
             <dd class="stock__param-value stock__param-value_positive">
               {{ stock.bid.toFixed(2) }}
             </dd>
           </dl>
         </div>
-        <span class="stock__price" :class="{ 'stock__price_error': isOutdated }">
+        <span class="stock__price" :class="{ stock__price_error: isOutdated }">
           {{ stock.price.toFixed(2) }}
         </span>
       </div>

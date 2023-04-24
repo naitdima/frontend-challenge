@@ -5,7 +5,7 @@
     </span>
     <input
       class="input__field"
-      :class="{ 'input__field_error': error }"
+      :class="{ input__field_error: error }"
       v-model="innerValue"
       :placeholder="placeholder"
       v-maska:[maskOptions]

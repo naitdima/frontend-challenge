@@ -7,7 +7,7 @@
     </section>
     <section v-if="stocks.length > 0" class="app__section">
       <h2 class="app_subheader">Subscriptions</h2>
-      <Stocks/>
+      <Stocks />
     </section>
   </main>
 </template>
