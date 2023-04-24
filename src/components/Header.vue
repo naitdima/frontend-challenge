@@ -27,6 +27,6 @@ import Logo from '@/assets/images/logo.svg'
 }
 
 .header__logo {
-  fill: #ffffff;
+  fill: var(--color-foreground3);
 }
 </style>

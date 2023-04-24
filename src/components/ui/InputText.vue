@@ -1,5 +1,8 @@
 <template>
   <label class="input">
+    <span v-if="label" class="input__label">
+      {{ label }}
+    </span>
     <input
       class="input__field"
       :class="{ 'input__field_error': error }"
@@ -7,7 +10,7 @@
       :placeholder="placeholder"
       v-maska:[maskOptions]
     />
-    <p class="input__error">{{ error }}</p>
+    <span v-show="error" class="input__error">{{ error }}</span>
   </label>
 </template>
 
@@ -17,6 +20,7 @@ import { vMaska } from 'maska'
 
 const props = defineProps<{
   modelValue: string
+  label: string
   placeholder: string
   mask: string
   error: string
@@ -49,6 +53,12 @@ const maskOptions = computed(() => {
   padding-bottom: 14px;
 }
 
+.input__label {
+  font-size: 14px;
+  line-height: 18px;
+  color: var(--color-foreground2);
+}
+
 .input__field {
   width: 100%;
   padding: 12px 0;
@@ -74,8 +84,7 @@ const maskOptions = computed(() => {
 }
 
 .input__error {
-  margin: 0;
-  bottom: 0;
+  display: block;
   left: 0;
   position: absolute;
   font-size: 10px;
