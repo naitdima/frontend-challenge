@@ -6,6 +6,6 @@ html {
 body {
     margin: 0;
     padding: 0;
-    background: var(--color-background1);
+    background-color: var(--color-background1);
     color: var(--color-foreground3);
 }

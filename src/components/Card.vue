@@ -5,14 +5,8 @@
 </template>
 
 <style scoped>
-:root {
-  --shadow-card: 0px 2px 8px rgba(0, 0, 0, 0.2);
-}
-
 .card {
-  padding: 12px;
-  border: 1px solid var(--color-foreground3);
-  border-radius: 6px;
-  box-shadow: var(--shadow-card);
+  padding: 12px 0;
+  border-bottom: 1px solid var(--color-foreground3);
 }
 </style>

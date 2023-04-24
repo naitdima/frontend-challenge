@@ -15,7 +15,6 @@ import Logo from '@/assets/images/logo.svg'
   margin: 0 auto;
   padding: 24px 0;
   display: flex;
-  max-width: var(--max-width);
 
   .header-title {
     visibility: hidden;

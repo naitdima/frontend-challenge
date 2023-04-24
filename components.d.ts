@@ -15,6 +15,8 @@ declare module '@vue/runtime-core' {
     Header: typeof import('./src/components/Header.vue')['default']
     InputText: typeof import('./src/components/ui/InputText.vue')['default']
     List: typeof import('./src/components/List.vue')['default']
+    Stock: typeof import('./src/components/Stock.vue')['default']
+    StockChart: typeof import('./src/components/StockChart.vue')['default']
     Stocks: typeof import('./src/components/Stocks.vue')['default']
     TextField: typeof import('./src/components/ui/InputText.vue')['default']
   }

@@ -54,17 +54,22 @@ const maskOptions = computed(() => {
 }
 
 .input__label {
-  font-size: 14px;
-  line-height: 18px;
-  color: var(--color-foreground2);
+  display: block;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--color-foreground1);
 }
 
 .input__field {
+  box-sizing: border-box;
+  padding: 0;
+  font-size: 14px;
+  line-height: 16px;
+  height: 40px;
   width: 100%;
-  padding: 12px 0;
   border: none;
   border-bottom: 1px solid var(--color-foreground1);
-  background: transparent;
+  background-color: transparent;
   color: var(--color-foreground3);
   font-family: inherit;
 

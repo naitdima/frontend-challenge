@@ -4,4 +4,5 @@ export interface Stock {
   bid: number
   ask: number
   updatedAt: string
+  priceHistory: number[]
 }

@@ -1,12 +1,14 @@
 <template>
+  <Header class="app__header" />
   <main class="app__main">
-    <Header />
-    <h2>New subscription</h2>
-    <Form @submit="subscribe" />
-    <template v-if="stocks.length > 0">
-      <h2>Subscriptions</h2>
+    <section class="app__section">
+      <h2 class="app_subheader">New subscription</h2>
+      <Form @submit="subscribe" />
+    </section>
+    <section v-if="stocks.length > 0" class="app__section">
+      <h2 class="app_subheader">Subscriptions</h2>
       <Stocks/>
-    </template>
+    </section>
   </main>
 </template>
 
@@ -26,8 +28,25 @@ const { stocks, subscribe } = stocksStore
 </style>
 
 <style scoped>
+.app__header {
+  max-width: 500px;
+  margin-bottom: 20px;
+}
+
 .app__main {
-  max-width: var(--max-width);
+  max-width: 500px;
   margin: 0 auto;
+}
+
+.app__section {
+  &:not(:last-child) {
+    margin-bottom: 28px;
+  }
+}
+
+.app_subheader {
+  font-size: 24px;
+  line-height: 32px;
+  margin: 0 0 16px 0;
 }
 </style>

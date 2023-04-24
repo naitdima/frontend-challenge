@@ -28,10 +28,15 @@ export const useStocksStore = defineStore('stocks', () => {
     const newStock = JSON.parse(event.data)
     newStock.updatedAt = new Date().toISOString()
     const index = stocks.findIndex(stock => stock.isin === newStock.isin)
+    const prevStock = stocks[index]
     if (index >= 0) {
+      newStock.priceHistory = prevStock.priceHistory ? [...prevStock.priceHistory.slice(-9), newStock.price] : [newStock.price]
       stocks.splice(index, 1, newStock)
     } else {
-      stocks.push(newStock)
+      stocks.push({
+        ...newStock,
+        priceHistory: [newStock.price]
+      })
     }
   })
 

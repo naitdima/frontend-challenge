@@ -1,6 +1,7 @@
 <template>
-  <form @submit.prevent="onSubmit">
+  <form class="form" @submit.prevent="onSubmit">
     <InputText
+      class="form__input"
       :model-value="state.isin"
       :error="v$.isin.$errors[0]?.$message ?? ''"
       label="ISIN"
@@ -8,14 +9,14 @@
       placeholder="XX0000000000"
       @update:modelValue="onChangeISIN"
     />
-    <Button>
+    <Button class="form__btn">
       Subscribe
     </Button>
   </form>
 </template>
 
 <script setup lang="ts">
-import { reactive, nextTick } from 'vue'
+import { reactive, nextTick, onMounted } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
 import { useStocksStore } from '@/store/stocks'
 import { helpers, required, minLength } from '@vuelidate/validators'
@@ -54,19 +55,25 @@ function onSubmit() {
   state.isin = ''
   nextTick(() => v$.value.$reset())
 }
+
+onMounted(() => {
+  // @todo: focus input
+})
 </script>
 
 <style scoped>
-.main {
-  max-width: var(--max-width);
-  margin: 0 auto;
+.form {
+  display: flex;
+  align-items: flex-start;
 }
 
-.heading1 {
-  font-weight: 700;
+.form__input {
+  flex-grow: 1;
 }
 
-.component-list {
-  padding: 0 0 0 12px;
+.form__btn {
+  flex-shrink: 0;
+  margin-top: 16px;
+  margin-left: 12px;
 }
 </style>
