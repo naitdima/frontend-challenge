@@ -1,6 +1,6 @@
 <template>
   <header class="header">
-    <a href="/">
+    <a href="/" aria-label="Trade Republic">
       <Logo class="header__logo" />
     </a>
   </header>
