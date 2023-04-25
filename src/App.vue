@@ -3,7 +3,7 @@
   <main class="app__main">
     <section class="app__section">
       <h2 class="app_subheader">New subscription</h2>
-      <Form @submit="subscribe" />
+      <StockForm />
     </section>
     <section v-if="stocks.length > 0" class="app__section">
       <h2 class="app_subheader">Subscriptions</h2>
@@ -13,10 +13,12 @@
 </template>
 
 <script setup lang="ts">
+import Header from '@/components/Header.vue'
+import StockForm from '@/components/StockForm.vue'
+import Stocks from '@/components/Stocks.vue'
 import { useStocksStore } from '@/store/stocks'
 
-const stocksStore = useStocksStore()
-const { stocks, subscribe } = stocksStore
+const { stocks } = useStocksStore()
 </script>
 
 <style>

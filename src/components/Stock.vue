@@ -1,53 +1,43 @@
 <template>
-  <div class="stock">
+  <article class="stock">
     <div class="stock__wrapper">
-      <div class="stock__container">
-        <p class="stock__isin">
+      <header class="stock__container">
+        <h3 class="stock__isin">
           {{ stock.isin }}
-        </p>
-        <IconClose v-if="deletable" class="stock__delete" @click="emit('delete')" />
-      </div>
+        </h3>
+        <button v-if="deletable" class="stock__delete" @click="emit('delete')">
+          <IconClose class="stock__delete-icon" />
+        </button>
+      </header>
+
       <div class="stock__container">
-        <div class="stock__params">
-          <dl class="stock__param">
-            <dt class="stock__param-label">Ask</dt>
-            <dd class="stock__param-value stock__param-value_negative">
-              {{ stock.ask.toFixed(2) }}
-            </dd>
-          </dl>
-          <dl class="stock__param">
-            <dt class="stock__param-label">Bid</dt>
-            <dd class="stock__param-value stock__param-value_positive">
-              {{ stock.bid.toFixed(2) }}
-            </dd>
-          </dl>
-        </div>
-        <span class="stock__price" :class="{ stock__price_error: isOutdated }">
-          {{ stock.price.toFixed(2) }}
+        <StockParams class="stock__params" :params="params" />
+        <span class="stock__price" :class="{ stock__price_error: error }">
+          {{ formatPrice(stock.price) }}
         </span>
       </div>
-      <p v-if="isOutdated" class="stock__error">
-        Failed to update - value from {{ formatDate(stock.updatedAt, 'kk:mm:ss') }}
+
+      <p v-if="error" class="stock__error">
+        {{ error }}
       </p>
     </div>
+
     <StockChart
-      v-if="stock.priceHistory?.length > 0"
+      v-if="stock.priceHistory.length > 0"
       class="stock__chart"
       :data="stock.priceHistory"
     />
-    <div class="stock__actions">
-      <button v-if="deletable" class="stock__action" @click="emit('delete')">
-        <IconClose class="stock__action-icon" />
-      </button>
-    </div>
-  </div>
+  </article>
 </template>
 
 <script setup lang="ts">
+import StockChart from '@/components/StockChart.vue'
+import StockParams from '@/components/StockParams.vue'
 import IconClose from '@/assets/icons/close.svg'
 import { computed } from 'vue'
-import { formatDate } from '@/utils/format'
-import type { Stock } from '@/types/stock'
+import { formatDate, formatPrice } from '@/utils/format'
+import type { ComputedRef } from 'vue'
+import type { Stock, StockParam } from '@/types/stock'
 
 const props = defineProps<{
   stock: Stock
@@ -58,10 +48,30 @@ const emit = defineEmits<{
   (e: 'delete'): void
 }>()
 
-const isOutdated = computed(() => {
-  const currentDate = new Date()
-  const stockDate = new Date(props.stock.updatedAt)
-  return currentDate.getTime() - stockDate.getTime() > 1000
+const params: ComputedRef<StockParam[]> = computed(() => {
+  return [
+    {
+      title: 'Ask',
+      negative: true,
+      value: formatPrice(props.stock.ask)
+    },
+    {
+      title: 'Bid',
+      positive: true,
+      value: formatPrice(props.stock.bid)
+    }
+  ]
+})
+
+const isOutdated: ComputedRef<boolean> = computed(() => {
+  return new Date().getTime() - new Date(props.stock.updatedAt).getTime() > 1000
+})
+
+const error: ComputedRef<string> = computed(() => {
+  if (isOutdated.value) {
+    return `Failed to update - value from ${formatDate(props.stock.updatedAt, 'kk:mm:ss')}`
+  }
+  return ''
 })
 </script>
 
@@ -86,103 +96,60 @@ const isOutdated = computed(() => {
   margin-bottom: 8px;
 }
 
-.stock__price_error {
-  color: var(--color-primary-red2);
-}
-
-.stock__delete {
-  display: none;
-  fill: var(--color-background1);
-  height: 16px;
-  width: 16px;
-  background-color: var(--color-foreground3);
-  padding: 2px;
-  cursor: pointer;
-}
-
-.stock__actions {
-  display: none;
-  //display: flex;
-  align-items: stretch;
-}
-
-.stock__action {
-  background-color: var(--color-background1);
-  height: 100%;
-  border: none;
-  cursor: pointer;
-
-  &:hover {
-    background-color: var(--color-foreground3);
-
-    .stock__action-icon {
-      fill: var(--color-foreground4);
-    }
-  }
-
-  &:active {
-    background-color: var(--color-foreground2);
-
-    .stock__action-icon {
-      fill: var(--color-foreground4);
-    }
-  }
-}
-
-.stock__action-icon {
-  fill: var(--color-foreground3);
-  height: 20px;
-  width: 20px;
-}
-
 .stock__isin {
+  flex-grow: 1;
   margin: 0;
   font-size: 18px;
   line-height: 24px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.stock__price {
-  font-size: 40px;
-  line-height: 40px;
-  font-weight: 700;
-}
+.stock__delete {
+  flex-shrink: 0;
+  padding: 0;
+  height: 22px;
+  width: 22px;
+  background-color: transparent;
+  cursor: pointer;
+  border: 1px solid transparent;
 
-.stock__params {
-  min-width: 100px;
-}
+  &:hover {
+    border-color: var(--color-foreground3);
+  }
 
-.stock__param {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 0;
+  &:active {
+    border-color: var(--color-foreground2);
 
-  &:not(:last-child) {
-    margin-bottom: 4px;
+    .stock__delete-icon {
+      fill: var(--color-foreground2);
+    }
   }
 }
 
-.stock__param-label {
-  min-width: 24px;
-  margin: 0;
-  font-size: 14px;
-  line-height: 20px;
-  color: var(--color-foreground1);
+.stock__delete-icon {
+  fill: var(--color-foreground3);
+  width: 100%;
+  height: 100%;
 }
 
-.stock__param-value {
-  margin: 0;
-  font-size: 18px;
-  line-height: 20px;
+.stock__params {
+  flex-grow: 1;
+}
+
+.stock__price {
+  flex-shrink: 1;
+  font-size: 40px;
+  line-height: 40px;
   font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.stock__param-value_positive {
-  color: var(--color-primary-green4);
-}
-
-.stock__param-value_negative {
-  color: var(--color-primary-red4);
+.stock__price_error {
+  color: var(--color-primary-red2);
 }
 
 .stock__error {
@@ -198,7 +165,5 @@ const isOutdated = computed(() => {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100% !important;
-  height: 100% !important;
 }
 </style>

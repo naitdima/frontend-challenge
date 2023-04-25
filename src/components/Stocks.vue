@@ -7,15 +7,10 @@
 </template>
 
 <script setup lang="ts">
+import Stock from '@/components/Stock.vue'
 import { useStocksStore } from '@/store/stocks'
-import type { Stock } from '../types/stock'
 
-const emit = defineEmits<{
-  (e: 'submit', isin: string): void
-}>()
-
-const stocksStore = useStocksStore()
-const { stocks, unsubscribe } = stocksStore
+const { stocks, unsubscribe } = useStocksStore()
 </script>
 
 <style scoped>

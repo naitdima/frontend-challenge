@@ -11,3 +11,10 @@ export interface Stock {
   updatedAt: string
   priceHistory: StockPriceHistoryItem[]
 }
+
+export interface StockParam {
+  title: string
+  value: string | number
+  positive?: boolean
+  negative?: boolean
+}

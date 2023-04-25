@@ -1,6 +1,6 @@
-import { onBeforeUnmount, onMounted, reactive, ref } from 'vue'
+import { reactive } from 'vue'
 import { defineStore } from 'pinia'
-import type { Stock } from '../types/stock'
+import type { Stock } from '@/types/stock'
 
 export const useStocksStore = defineStore('stocks', () => {
   const socket = new WebSocket('ws://localhost:8425')
@@ -11,7 +11,8 @@ export const useStocksStore = defineStore('stocks', () => {
       price: 202.40490308361424,
       bid: 202.39490308361425,
       ask: 202.41490308361423,
-      updatedAt: '2023-04-24T17:39:42.752Z'
+      updatedAt: '2023-04-24T17:39:42.752Z',
+      priceHistory: []
     }
   ])
 
@@ -37,28 +38,33 @@ export const useStocksStore = defineStore('stocks', () => {
     const prevStock = stocks[index]
     if (index >= 0) {
       newStock.priceHistory = prevStock.priceHistory
-        ? [...prevStock.priceHistory.slice(-9), {
-          date: new Date().toISOString(),
-          value: newStock.price
-        }]
+        ? [
+            ...prevStock.priceHistory.slice(-9),
+            {
+              date: new Date().toISOString(),
+              value: newStock.price
+            }
+          ]
         : [newStock.price]
       stocks.splice(index, 1, newStock)
     } else {
       stocks.push({
         ...newStock,
-        priceHistory: [{
-          date: new Date().toISOString(),
-          value: newStock.price
-        }]
+        priceHistory: [
+          {
+            date: new Date().toISOString(),
+            value: newStock.price
+          }
+        ]
       })
     }
   })
 
-  function subscribe(isin: string) {
+  function subscribe(isin: string): void {
     sendMessage(`{"subscribe":"${isin}"}`)
   }
 
-  function unsubscribe(isin: string) {
+  function unsubscribe(isin: string): void {
     sendMessage(`{"unsubscribe":"${isin}"}`)
     const index = stocks.findIndex((stock) => stock.isin === isin)
     if (index >= 0) {
@@ -66,13 +72,13 @@ export const useStocksStore = defineStore('stocks', () => {
     }
   }
 
-  function isISINSubscribed(isin: string) {
+  function isISINSubscribed(isin: string): boolean {
     return stocks.some((stock) => stock.isin === isin)
   }
 
-  function reset() {
-    socket.close()
-  }
+  // function reset(): void {
+  //   socket.close()
+  // }
 
   return {
     stocks,
