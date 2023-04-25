@@ -30,14 +30,6 @@ onBeforeUnmount(() => {
 })
 </script>
 
-<style>
-#app {
-  font-family: var(--main-font-family);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-</style>
-
 <style scoped>
 .app__header {
   max-width: 400px;
@@ -47,7 +39,7 @@ onBeforeUnmount(() => {
 .app__main {
   max-width: 400px;
   margin: 0 auto;
-  padding-bottom: 80px;
+  padding-bottom: 40px;
 }
 
 .app__section {

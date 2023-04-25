@@ -14,7 +14,8 @@ html {
 
 body {
   margin: 0;
-  padding: 0;
+  padding: 0 20px;
   background-color: var(--color-background1);
   color: var(--color-foreground3);
+  font-family: var(--main-font-family);
 }
