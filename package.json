@@ -2,6 +2,7 @@
   "name": "trade-republic-challenge",
   "private": true,
   "version": "0.1.1",
+  "author": "Dmitry Metelkov <dmmetelkov@gmail.com>",
   "scripts": {
     "dev": "concurrently \"node server.mjs\" \"vite\"",
     "build": "run-p type-check build-only",
