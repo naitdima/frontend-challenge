@@ -1,47 +1,18 @@
-import { ref, reactive } from 'vue'
+import { reactive } from 'vue'
 import { defineStore } from 'pinia'
-import type { Ref } from 'vue'
 import type { Stock } from '@/types/stock'
 import { updatePriceHistory } from '@/utils/stock'
+import { useWebSockets } from '@/composables/web-socket'
 
 export const useStocksStore = defineStore('stocks', () => {
-  const socket: Ref<null | WebSocket> = ref(null)
-  const socketIsConnected: Ref<boolean> = ref(false)
   const stocks: Stock[] = reactive([])
 
-  function init() {
-    socket.value = new WebSocket('ws://localhost:8425')
-    socket.value.addEventListener('open', onOpen)
-    socket.value.addEventListener('message', onMessage)
-    socket.value.addEventListener('close', onClose)
-    socket.value.addEventListener('error', onError)
-  }
+  const { init, destroy, sendMessage } = useWebSockets('ws://localhost:8425', onStockReceived)
 
-  function destroy() {
-    if (socketIsConnected.value) {
-      socket.value?.close()
-    }
-  }
-
-  function onOpen(): void {
-    socketIsConnected.value = true
-  }
-
-  function onClose(): void {
-    socketIsConnected.value = false
-    socket.value = null
-  }
-
-  function onError(error) {
-    console.error('WebSocket error:', error)
-  }
-
-  function onMessage(event): void {
-    if (!event?.data) {
+  function onStockReceived(newStock: any): void {
+    if (!newStock?.isin) {
       return
     }
-
-    const newStock = JSON.parse(event.data)
 
     const stockIndex = stocks.findIndex((stock) => stock.isin === newStock.isin)
     const stock = stocks[stockIndex]
@@ -53,14 +24,6 @@ export const useStocksStore = defineStore('stocks', () => {
       stocks.push(newStock)
     } else {
       stocks.splice(stockIndex, 1, newStock)
-    }
-  }
-
-  function sendMessage(message: any) {
-    if (socket.value?.readyState === WebSocket.OPEN) {
-      socket.value.send(JSON.stringify(message))
-    } else {
-      throw new Error('WebSocket is not connected.')
     }
   }
 
