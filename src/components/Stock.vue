@@ -69,7 +69,7 @@ const isOutdated: ComputedRef<boolean> = computed(() => {
 
 const error: ComputedRef<string> = computed(() => {
   if (isOutdated.value) {
-    return `Failed to update - value from ${formatDate(props.stock.updatedAt, 'kk:mm:ss')}`
+    return `Failed to update - value from ${formatDate(props.stock.updatedAt, 'HH:mm:ss')}`
   }
   return ''
 })

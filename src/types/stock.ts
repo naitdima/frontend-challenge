@@ -1,6 +1,6 @@
 export interface StockPriceHistoryItem {
   date: string
-  value: string
+  value: number
 }
 
 export interface Stock {

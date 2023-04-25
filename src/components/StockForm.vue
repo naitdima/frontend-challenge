@@ -25,7 +25,7 @@ import type { ComputedRef } from 'vue'
 const { subscribe, isISINSubscribed } = useStocksStore()
 
 const state = reactive({
-  isin: 'US0378331006'
+  isin: ''
 })
 
 const rules = reactive({

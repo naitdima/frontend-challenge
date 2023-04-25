@@ -1,6 +1,8 @@
 import type { StockPriceHistoryItem } from '@/types/stock'
 
-function createPriceHistoryItem(value: StockPriceHistoryItem['value']): StockPriceHistoryItem {
+export function createPriceHistoryItem(
+  value: StockPriceHistoryItem['value']
+): StockPriceHistoryItem {
   return {
     date: new Date().toISOString(),
     value
