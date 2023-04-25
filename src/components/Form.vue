@@ -71,7 +71,7 @@ onMounted(() => {
 
 .form__btn {
   flex-shrink: 0;
-  margin-top: 16px;
+  margin-top: 18px;
   margin-left: 12px;
 }
 </style>

@@ -37,13 +37,19 @@ export const useStocksStore = defineStore('stocks', () => {
     const prevStock = stocks[index]
     if (index >= 0) {
       newStock.priceHistory = prevStock.priceHistory
-        ? [...prevStock.priceHistory.slice(-9), newStock.price]
+        ? [...prevStock.priceHistory.slice(-9), {
+          date: new Date().toISOString(),
+          value: newStock.price
+        }]
         : [newStock.price]
       stocks.splice(index, 1, newStock)
     } else {
       stocks.push({
         ...newStock,
-        priceHistory: [newStock.price]
+        priceHistory: [{
+          date: new Date().toISOString(),
+          value: newStock.price
+        }]
       })
     }
   })

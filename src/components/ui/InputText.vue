@@ -50,22 +50,21 @@ const maskOptions = computed(() => {
 .input {
   display: inline-block;
   position: relative;
-  padding-bottom: 14px;
+  padding-bottom: 18px;
 }
 
 .input__label {
   display: block;
-  font-size: 12px;
-  line-height: 16px;
+  font-size: 14px;
+  line-height: 18px;
   color: var(--color-foreground1);
 }
 
 .input__field {
-  box-sizing: border-box;
   padding: 0;
-  font-size: 14px;
-  line-height: 16px;
-  height: 40px;
+  font-size: 16px;
+  line-height: 18px;
+  height: 42px;
   width: 100%;
   border: none;
   border-bottom: 1px solid var(--color-foreground1);
@@ -91,9 +90,10 @@ const maskOptions = computed(() => {
 .input__error {
   display: block;
   left: 0;
+  bottom: 0;
   position: absolute;
-  font-size: 10px;
-  line-height: 14px;
+  font-size: 12px;
+  line-height: 18px;
   color: var(--color-primary-red1);
 }
 </style>

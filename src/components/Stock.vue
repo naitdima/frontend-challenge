@@ -1,6 +1,6 @@
 <template>
   <div class="stock">
-    <div>
+    <div class="stock__wrapper">
       <div class="stock__container">
         <p class="stock__isin">
           {{ stock.isin }}
@@ -8,7 +8,7 @@
         <IconClose v-if="deletable" class="stock__delete" @click="emit('delete')" />
       </div>
       <div class="stock__container">
-        <div>
+        <div class="stock__params">
           <dl class="stock__param">
             <dt class="stock__param-label">Ask</dt>
             <dd class="stock__param-value stock__param-value_negative">
@@ -27,7 +27,7 @@
         </span>
       </div>
       <p v-if="isOutdated" class="stock__error">
-        Failed to update - value from {{ formatTime(stock.updatedAt) }}
+        Failed to update - value from {{ formatDate(stock.updatedAt, 'kk:mm:ss') }}
       </p>
     </div>
     <StockChart
@@ -46,8 +46,8 @@
 <script setup lang="ts">
 import IconClose from '@/assets/icons/close.svg'
 import { computed } from 'vue'
-import { formatTime } from '@/utils/format'
-import type { Stock } from '../types/stock'
+import { formatDate } from '@/utils/format'
+import type { Stock } from '@/types/stock'
 
 const props = defineProps<{
   stock: Stock
@@ -67,12 +67,23 @@ const isOutdated = computed(() => {
 
 <style scoped>
 .stock {
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
   position: relative;
-  padding: 12px 0;
   border-bottom: 1px solid var(--color-foreground3);
+}
+
+.stock__wrapper {
+  width: 100%;
+  height: 100%;
+  padding: 12px;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.stock__container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 8px;
 }
 
 .stock__price_error {
@@ -90,7 +101,8 @@ const isOutdated = computed(() => {
 }
 
 .stock__actions {
-  display: flex;
+  display: none;
+  //display: flex;
   align-items: stretch;
 }
 
@@ -123,14 +135,6 @@ const isOutdated = computed(() => {
   width: 20px;
 }
 
-.stock__container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-  margin-bottom: 8px;
-}
-
 .stock__isin {
   margin: 0;
   font-size: 18px;
@@ -141,6 +145,10 @@ const isOutdated = computed(() => {
   font-size: 40px;
   line-height: 40px;
   font-weight: 700;
+}
+
+.stock__params {
+  min-width: 100px;
 }
 
 .stock__param {
@@ -186,6 +194,11 @@ const isOutdated = computed(() => {
 }
 
 .stock__chart {
-  display: none;
+  z-index: -1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100% !important;
+  height: 100% !important;
 }
 </style>

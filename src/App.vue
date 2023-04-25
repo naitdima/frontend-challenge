@@ -29,13 +29,14 @@ const { stocks, subscribe } = stocksStore
 
 <style scoped>
 .app__header {
-  max-width: 500px;
+  max-width: 400px;
   margin-bottom: 20px;
 }
 
 .app__main {
-  max-width: 500px;
+  max-width: 400px;
   margin: 0 auto;
+  padding-bottom: 80px;
 }
 
 .app__section {
