@@ -1,71 +1,76 @@
-import { reactive } from 'vue'
+import { ref, reactive } from 'vue'
 import { defineStore } from 'pinia'
+import type { Ref } from 'vue'
 import type { Stock } from '@/types/stock'
+import { updatePriceHistory } from '@/utils/stock'
 
 export const useStocksStore = defineStore('stocks', () => {
-  const socket = new WebSocket('ws://localhost:8425')
+  const socket: Ref<null | WebSocket> = ref(null)
+  const socketIsConnected: Ref<boolean> = ref(false)
+  const stocks: Stock[] = reactive([])
 
-  const stocks: Stock[] = reactive([
-    {
-      isin: 'US0378331005',
-      price: 202.40490308361424,
-      bid: 202.39490308361425,
-      ask: 202.41490308361423,
-      updatedAt: '2023-04-24T17:39:42.752Z',
-      priceHistory: []
-    }
-  ])
+  function init() {
+    socket.value = new WebSocket('ws://localhost:8425')
+    socket.value.addEventListener('open', onOpen)
+    socket.value.addEventListener('message', onMessage)
+    socket.value.addEventListener('close', onClose)
+    socket.value.addEventListener('error', onError)
+  }
 
-  function sendMessage(message: string) {
-    if (socket && socket.readyState === WebSocket.OPEN) {
-      socket.send(message)
-    } else {
-      console.log('WebSocket is not connected.')
+  function destroy() {
+    if (socketIsConnected.value) {
+      socket.value?.close()
     }
   }
 
-  socket.addEventListener('open', (event) => {
-    console.log('WebSocket connected:', event)
-  })
+  function onOpen(): void {
+    socketIsConnected.value = true
+  }
 
-  socket.addEventListener('message', (event) => {
+  function onClose(): void {
+    socketIsConnected.value = false
+    socket.value = null
+  }
+
+  function onError(error) {
+    console.error('WebSocket error:', error)
+  }
+
+  function onMessage(event): void {
     if (!event?.data) {
       return
     }
+
     const newStock = JSON.parse(event.data)
+
+    const stockIndex = stocks.findIndex((stock) => stock.isin === newStock.isin)
+    const stock = stocks[stockIndex]
+
     newStock.updatedAt = new Date().toISOString()
-    const index = stocks.findIndex((stock) => stock.isin === newStock.isin)
-    const prevStock = stocks[index]
-    if (index >= 0) {
-      newStock.priceHistory = prevStock.priceHistory
-        ? [
-            ...prevStock.priceHistory.slice(-9),
-            {
-              date: new Date().toISOString(),
-              value: newStock.price
-            }
-          ]
-        : [newStock.price]
-      stocks.splice(index, 1, newStock)
+    newStock.priceHistory = updatePriceHistory(newStock.price, stock?.priceHistory ?? [])
+
+    if (!stock) {
+      stocks.push(newStock)
     } else {
-      stocks.push({
-        ...newStock,
-        priceHistory: [
-          {
-            date: new Date().toISOString(),
-            value: newStock.price
-          }
-        ]
-      })
+      stocks.splice(stockIndex, 1, newStock)
     }
-  })
+  }
+
+  function sendMessage(message: any) {
+    if (socket.value?.readyState === WebSocket.OPEN) {
+      socket.value.send(JSON.stringify(message))
+    } else {
+      throw new Error('WebSocket is not connected.')
+    }
+  }
 
   function subscribe(isin: string): void {
-    sendMessage(`{"subscribe":"${isin}"}`)
+    sendMessage({ subscribe: isin })
   }
 
   function unsubscribe(isin: string): void {
-    sendMessage(`{"unsubscribe":"${isin}"}`)
+    sendMessage({ unsubscribe: isin })
+
     const index = stocks.findIndex((stock) => stock.isin === isin)
     if (index >= 0) {
       stocks.splice(index, 1)
@@ -76,12 +81,10 @@ export const useStocksStore = defineStore('stocks', () => {
     return stocks.some((stock) => stock.isin === isin)
   }
 
-  // function reset(): void {
-  //   socket.close()
-  // }
-
   return {
     stocks,
+    init,
+    destroy,
     subscribe,
     unsubscribe,
     isISINSubscribed

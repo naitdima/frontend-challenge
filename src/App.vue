@@ -17,8 +17,17 @@ import Header from '@/components/Header.vue'
 import StockForm from '@/components/StockForm.vue'
 import Stocks from '@/components/Stocks.vue'
 import { useStocksStore } from '@/store/stocks'
+import { onMounted, onBeforeUnmount } from 'vue'
 
-const { stocks } = useStocksStore()
+const { init, destroy, stocks } = useStocksStore()
+
+onMounted(() => {
+  init()
+})
+
+onBeforeUnmount(() => {
+  destroy()
+})
 </script>
 
 <style>
